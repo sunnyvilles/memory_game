@@ -81,19 +81,24 @@ $(document).ready(function(){
 	$('.tile').click(function(){
 
 	
-			if (!currentTile) {
+			if (!currentTile) { //currentTile not present
 				currentTile = this;
+				$(currentTile).children().show()
 			}
 
 			else{ 	//currentTile present
 
-				if(!prevTile){
+				if(!prevTile){ // prevTile not present, currentTile present
 					prevTile = currentTile;
 					currentTile = this;
+					$(currentTile).children().show()
 				}
-				else{  	//prevTile present ie.both present
+				else{  	// both present
+					$(currentTile).children().hide()
+					$(prevTile).children().hide()
 					currentTile = this;
 					prevTile = null;
+					$(currentTile).children().show()
 				}
 			}
 
