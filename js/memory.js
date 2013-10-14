@@ -8,7 +8,8 @@ var randomNo = randomNumber(6,12);
 var arrTiles = []; 	 //initial array haveing random no of objects, serially
 var arrRandom = []; //final array with two entries of each object, random
 var prevTile,currentTile;
-
+var clickAllowed = true;
+var deactiveCount = 0;
 ////////////globals end //////////////////
 
 var randomFill = function(){
@@ -72,7 +73,22 @@ var hideImg = function(){ // hides images of all tiles passed in argument
 	})
 }
 
-///////////////// the call
+var disableClick = function(){
+	$.each(arguments,function(i,el){
+		$(el).children().click(false)
+
+	})
+}
+
+var addPhrase = function(){
+
+	$.each(arguments,function(i,el){
+		$(el).html($(el).attr("name").toString())
+
+	})
+}
+
+///////////////// call
 $.ajax({
 dataType: "json",
 url: "words.json",
@@ -107,11 +123,30 @@ var theGame = function(){
 
 					if ($(currentTile).attr("name") == $(prevTile).attr("name"))
 					{
-						console.log('matching tiles removed');
+						disableClick(currentTile,prevTile)
+						clickAllowed = false;
+						window.setTimeout(function(){
+							hideImg(currentTile,prevTile);
+							addPhrase(currentTile,prevTile);
+							clickAllowed=true;
+						},1000);
+						
+						$('.message').html('matching tiles removed');
+						
+						$(currentTile).addClass("deactive")
+						$(prevTile).addClass("deactive")
+						deactiveCount++;
+
+						if (deactiveCount==randomNo)
+						{	
+							if (window.confirm('good job ! play again?')) {
+        						window.location.reload();
+    						}
+						}
 					}
 					else {
-						console.log('tiles DO not match')
-						//window.setTimeout(,1000);
+						$('.message').html('tiles DO not match')
+						
 					}
 				}
 				
@@ -123,6 +158,8 @@ var theGame = function(){
 					showImg(currentTile);
 				}
 			}
+
+
 }
 
 
@@ -130,7 +167,7 @@ $(document).ready(function(){
 
 	$('.tile').click(function(){
 
-		theGame.apply(this)
+	if (!($(this).attr('class').split(' ')[1] == "deactive") && clickAllowed) theGame.apply(this);
 
 	})
 })
