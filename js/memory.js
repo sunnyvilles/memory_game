@@ -4,12 +4,14 @@ return Math.floor(Math.random()*(b-a+1) + a);
 }
 
 
-var randomNo = randomNumber(6,12);
+var randomNo = randomNumber(3,6); //lower these numbers for better look
 var arrTiles = []; 	 //initial array haveing random no of objects, serially
 var arrRandom = []; //final array with two entries of each object, random
 var prevTile,currentTile;
 var clickAllowed = true;
 var deactiveCount = 0;
+
+
 ////////////globals end //////////////////
 
 var randomFill = function(){
@@ -73,14 +75,14 @@ var hideImg = function(){ // hides images of all tiles passed in argument
 	})
 }
 
-var disableClick = function(){
+var disableClick = function(){ // diables clicks on tiles passed in argument
 	$.each(arguments,function(i,el){
 		$(el).children().click(false)
 
 	})
 }
 
-var addPhrase = function(){
+var addPhrase = function(){  // adds Phrase on tiles passed in argument
 
 	$.each(arguments,function(i,el){
 		$(el).html($(el).attr("name").toString())
@@ -131,7 +133,7 @@ var theGame = function(){
 							clickAllowed=true;
 						},1000);
 						
-						$('.message').html('matching tiles removed');
+						$('.message').html('<span>matching tiles removed</span>');
 						
 						$(currentTile).addClass("deactive")
 						$(prevTile).addClass("deactive")
@@ -139,13 +141,14 @@ var theGame = function(){
 
 						if (deactiveCount==randomNo)
 						{	
+							$('.message').html('<span>Play Again</span>');
 							if (window.confirm('good job ! play again?')) {
         						window.location.reload();
     						}
 						}
 					}
 					else {
-						$('.message').html('tiles DO not match')
+						$('.message').html('<span>tiles DO not match</span>')
 						
 					}
 				}

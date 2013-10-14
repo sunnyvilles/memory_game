@@ -25,16 +25,24 @@
 }
 
 .tile img {
+	
 	display: none;
 	height:100%;
 	
 }
 
-.message {
+.message{
 
+	overflow: hidden;
 }
 
-.deactive{
+.message span {
 
-	
+	display: block;
+	width: 62%;
+	height: 30px;
+	text-align: center;
+	line-height:30px;
+	margin-left: 15.5%;
+	border: 1px solid green;
 }
