@@ -3,6 +3,7 @@ var randomNumber = function(a,b){
 return Math.floor(Math.random()*(b-a+1) + a);
 }
 
+
 var randomNo = randomNumber(6,12);
 var arrTiles = []; 	 //initial array haveing random no of objects, serially
 var arrRandom = []; //final array with two entries of each object, random
@@ -57,8 +58,21 @@ $.each(arrRandom,function(i,obj){
 	
 }
 
+var showImg = function(){ // shows images of all tiles passed in argument
+	$.each(arguments,function(i,el){
+		$(el).children().show()
 
+	})
+}
 
+var hideImg = function(){ // hides images of all tiles passed in argument
+	$.each(arguments,function(i,el){
+		$(el).children().hide()
+
+	})
+}
+
+///////////////// the call
 $.ajax({
 dataType: "json",
 url: "words.json",
@@ -74,38 +88,49 @@ success: function(data){
 });
 
 
+var theGame = function(){
 
-$(document).ready(function(){
-
-
-	$('.tile').click(function(){
-
-	
-			if (!currentTile) { //currentTile not present
+		if (!currentTile) { //currentTile not present
+				
 				currentTile = this;
-				$(currentTile).children().show()
+				showImg(currentTile);
+	
 			}
 
 			else{ 	//currentTile present
 
 				if(!prevTile){ // prevTile not present, currentTile present
+					
 					prevTile = currentTile;
 					currentTile = this;
-					$(currentTile).children().show()
+					showImg(currentTile);
+
+					if ($(currentTile).attr("name") == $(prevTile).attr("name"))
+					{
+						console.log('matching tiles removed');
+					}
+					else {
+						console.log('tiles DO not match')
+						//window.setTimeout(,1000);
+					}
 				}
+				
 				else{  	// both present
-					$(currentTile).children().hide()
-					$(prevTile).children().hide()
+					
+					hideImg(currentTile,prevTile)
 					currentTile = this;
 					prevTile = null;
-					$(currentTile).children().show()
+					showImg(currentTile);
 				}
 			}
+}
 
 
-	console.log($(prevTile).attr("name"))
-	console.log($(currentTile).attr("name"))
+$(document).ready(function(){
 
+	$('.tile').click(function(){
+
+		theGame.apply(this)
 
 	})
 })
