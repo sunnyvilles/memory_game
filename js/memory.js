@@ -1,43 +1,3 @@
-//random no between a and b
-var randomNumber = function(a,b){
-return Math.floor(Math.random()*(b-a+1) + a);
-}
-
-
-var randomNo = randomNumber(3,6); //lower these numbers for better look
-var arrTiles = []; 	 //initial array haveing random no of objects, serially
-var arrRandom = []; //final array with two entries of each object, random
-var prevTile,currentTile;
-var clickAllowed = true;
-var deactiveCount = 0;
-
-
-////////////globals end //////////////////
-
-var randomFill = function(){
-	
-	while(arrTiles.length > 0){
-
-				n1 = randomNumber(0,2*randomNo-1)
-				while(arrRandom[n1]){
-					n1 = randomNumber(0,2*randomNo-1)
-				}
-
-
-				n2 = randomNumber(0,2*randomNo-1)
-				while(n1==n2 || arrRandom[n2]){
-					n2 = randomNumber(0,2*randomNo-1)
-				}
-
-				arrRandom[n1] = arrTiles[0];
-				arrRandom[n2] = arrTiles[0];
-				arrTiles.shift();
-		}
-
-}
-
-////DOM//////////////
-
 
 var getTileElement = function(){
 
@@ -48,7 +8,7 @@ var getTileElement = function(){
 
 var createGame = function(){
 
-$.each(arrRandom,function(i,obj){
+$.each(app.getRandomArray(),function(i,obj){
 
 	var el = getTileElement();
 	el.setAttribute('name',obj.phrase);
@@ -96,11 +56,11 @@ dataType: "json",
 url: "words.json",
 success: function(data){
 	var i=0;
-		while(i<randomNo){
-			arrTiles.push(data.data[i]);
+		while(i<app.randomNo){
+			app.arrTiles.push(data.data[i]);
 			i++;
 		}
-		randomFill();
+		app.randomFill();
 		createGame();
 	}
 });
@@ -108,38 +68,38 @@ success: function(data){
 
 var theGame = function(){
 
-		if (!currentTile) { //currentTile not present
+		if (!app.getCurrentTile()) { //CurrentTile not present
 				
-				currentTile = this;
-				showImg(currentTile);
+				app.setCurrentTile(this);
+				showImg(app.getCurrentTile());
 	
 			}
 
-			else{ 	//currentTile present
+			else{ 	//CurrentTile present
 
-				if(!prevTile){ // prevTile not present, currentTile present
+				if(!app.getPrevTile()){ // etPrevTile not present, CurrentTile present
 					
-					prevTile = currentTile;
-					currentTile = this;
-					showImg(currentTile);
+					app.setPrevTile(app.getCurrentTile()) ;
+					app.setCurrentTile(this);
+					showImg(app.getCurrentTile());
 
-					if ($(currentTile).attr("name") == $(prevTile).attr("name"))
+					if ($(app.getCurrentTile()).attr("name") == $(app.getPrevTile()).attr("name"))
 					{
-						disableClick(currentTile,prevTile)
-						clickAllowed = false;
+						disableClick(app.getCurrentTile(),app.getPrevTile())
+						app.clickAllowed = false;
 						window.setTimeout(function(){
-							hideImg(currentTile,prevTile);
-							addPhrase(currentTile,prevTile);
-							clickAllowed=true;
+							hideImg(app.getCurrentTile(),app.getPrevTile());
+							addPhrase(app.getCurrentTile(),app.getPrevTile());
+							app.clickAllowed=true;
 						},1000);
 						
 						$('.message').html('<span>matching tiles removed</span>');
 						
-						$(currentTile).addClass("deactive")
-						$(prevTile).addClass("deactive")
-						deactiveCount++;
+						$(app.getCurrentTile()).addClass("deactive")
+						$(app.getPrevTile()).addClass("deactive")
+						app.deactiveCount++;
 
-						if (deactiveCount==randomNo)
+						if (app.deactiveCount==app.randomNo)
 						{	
 							$('.message').html('<span>Play Again</span>');
 							if (window.confirm('good job ! play again?')) {
@@ -155,10 +115,10 @@ var theGame = function(){
 				
 				else{  	// both present
 					
-					hideImg(currentTile,prevTile)
-					currentTile = this;
-					prevTile = null;
-					showImg(currentTile);
+					hideImg(app.getCurrentTile(),app.getPrevTile())
+					app.setCurrentTile(this);
+					app.setPrevTile(null) ;
+					showImg(app.getCurrentTile());
 				}
 			}
 
@@ -170,7 +130,7 @@ $(document).ready(function(){
 
 	$('.tile').click(function(){
 
-	if (!($(this).attr('class').split(' ')[1] == "deactive") && clickAllowed) theGame.apply(this);
+	if (!($(this).attr('class').split(' ')[1] == "deactive") && app.clickAllowed) theGame.apply(this);
 
 	})
 })
