@@ -1,0 +1,32 @@
+.Content{
+
+	position: relative;
+	margin: auto;
+		top: 0;
+  		right: 0;
+  		bottom: 0;
+  		left: 0;
+	width: 70%;
+	
+	
+}
+
+.tile {
+
+	width: 31%;
+	height: 110px;
+	float: left;
+	margin: 3px 1px 3px 1px;
+	background: lightgrey;
+	text-align: center;
+	overflow:hidden;
+	line-height:110px;
+
+}
+
+.tile img {
+	display: none;
+	height:100%;
+	
+}
+
